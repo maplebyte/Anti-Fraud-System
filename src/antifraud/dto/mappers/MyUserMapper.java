@@ -1,0 +1,30 @@
+package antifraud.dto.mappers;
+
+import antifraud.dto.UserDTO;
+import antifraud.models.User;
+import org.springframework.stereotype.Component;
+
+@Component
+public class MyUserMapper {
+
+    public User userDTOToUser(UserDTO userDTO) {
+        User user = new User();
+        user.setId(userDTO.getId());
+        user.setName(userDTO.getName());
+        user.setPassword(userDTO.getPassword());
+        user.setUsername(userDTO.getUsername());
+        return user;
+    }
+
+    public UserDTO userToUserDTO(User user) {
+        UserDTO userDTO = new UserDTO();
+        userDTO.setId(user.getId());
+        userDTO.setName(user.getName());
+        userDTO.setPassword(user.getPassword());
+        userDTO.setUsername(user.getUsername());
+        return userDTO;
+    }
+
+}
+// TODO rewrite with mapstract
+// TODO add role
