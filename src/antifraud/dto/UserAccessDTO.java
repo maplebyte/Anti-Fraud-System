@@ -1,15 +1,16 @@
 package antifraud.dto;
 
-import antifraud.validation.operation.ValidOperation;
+import antifraud.utils.Operation;
+import antifraud.validation.ValidEnum;
 import lombok.Data;
 
 @Data
 public class UserAccessDTO {
 
-    private String username;
-
-    @ValidOperation(message = "Operation is invalid.")
+    @ValidEnum(clazz = Operation.class, message = "Operation is invalid.")
     private String operation;
+
+    private String username;
 
 }
 

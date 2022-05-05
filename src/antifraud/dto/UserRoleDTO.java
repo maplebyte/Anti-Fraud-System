@@ -1,12 +1,13 @@
 package antifraud.dto;
 
-import antifraud.validation.role.ValidRole;
+import antifraud.utils.Role;
+import antifraud.validation.ValidEnum;
 import lombok.Data;
 
 @Data
 public class UserRoleDTO {
 
-    @ValidRole(message = "Role is invalid.")
+    @ValidEnum(clazz = Role.class, message = "Role is invalid.")
     private String role;
 
     private String username;
