@@ -1,12 +1,13 @@
 package antifraud.services;
 
+import antifraud.dto.UserAccessDTO;
 import antifraud.dto.UserDTO;
+import antifraud.dto.UserRoleDTO;
 import antifraud.dto.mappers.MyUserMapper;
-import antifraud.exceptions.UserAlreadyExistException;
-import antifraud.exceptions.UserNotFoundException;
-import antifraud.exceptions.UserNullPointerException;
+import antifraud.exceptions.*;
 import antifraud.models.User;
 import antifraud.respositories.UserRepository;
+import antifraud.utils.Operation;
 import antifraud.utils.Role;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +41,16 @@ public class UserService {
             throw new UserAlreadyExistException(userDTO.getUsername());
         }
         String encodePassword = passwordEncoder.encode(userDTO.getPassword());
-        userDTO.setPassword(encodePassword);
         User savedUser = userMapper.userDTOToUser(userDTO);
-        // if random number is odd role will be ADMIN, otherwise USER
-        Role userOrAdmin = Math.round(Math.random()) % 2 == 0 ? Role.USER : Role.ADMIN;
-        savedUser.setRole(userOrAdmin);
+        Role role;
+        if(userRepository.count() == 0) {
+            role = Role.ADMINISTRATOR;
+        } else {
+            role = Role.MERCHANT;
+        }
+        savedUser.setPassword(encodePassword);
+        savedUser.setRole(role);
+        savedUser.setLocked(role != Role.ADMINISTRATOR);
         userRepository.save(savedUser);
         log.info("Saved user " + savedUser);
         return userMapper.userToUserDTO(savedUser);
@@ -63,6 +69,39 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException(username));
         userRepository.delete(user);
         log.info("User with {} was deleted", username);
+    }
+
+    public UserDTO updateRoleByUsername(UserRoleDTO userRoleDTO) {
+        String username = userRoleDTO.getUsername();
+        User user = userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+        Role roleForUpdate = Role.valueOf(userRoleDTO.getRole());
+        if (!List.of(Role.MERCHANT, Role.SUPPORT).contains(roleForUpdate)) {
+            throw new UnsupportedRoleException(roleForUpdate.name());
+        }
+        if (roleForUpdate == user.getRole()) {
+            throw new RoleIsAlreadyProvidedException(roleForUpdate);
+        }
+        user.setRole(roleForUpdate);
+        userRepository.save(user);
+        log.info("User role was updated {} ", user);
+        return userMapper.userToUserDTO(user);
+    }
+
+    public boolean updateAccessByUsername(UserAccessDTO userAccessDTO) {
+        String username = userAccessDTO.getUsername();
+        User user = userRepository.findUserByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+        if (user.getRole() == Role.ADMINISTRATOR) {
+            throw new UnsupportedRoleException("User with " + Role.ADMINISTRATOR.name() + " role " + "can't be locked");
+        }
+        String stringAccess = userAccessDTO.getOperation();
+        Operation accessOperation = Operation.valueOf(stringAccess);
+        boolean isLocked = accessOperation == Operation.LOCK;
+        user.setLocked(isLocked);
+        userRepository.save(user);
+        log.info("User access was updated {} ", user);
+        return isLocked;
     }
 
 }

@@ -8,5 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class TransactionDTO {
+
     private Long amount;
+
 }

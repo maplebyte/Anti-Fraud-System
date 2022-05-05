@@ -1,7 +1,7 @@
 package antifraud.controllers;
 
-import antifraud.dto.ResultDTO;
 import antifraud.dto.TransactionDTO;
+import antifraud.dto.TransactionResultDTO;
 import antifraud.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class TransactionController {
     }
 
     @PostMapping("/api/antifraud/transaction")
-    public ResponseEntity<ResultDTO> transaction(@RequestBody TransactionDTO transaction) {
+    public ResponseEntity<TransactionResultDTO> transaction(@RequestBody TransactionDTO transaction) {
         return new ResponseEntity<>(transactionService.validate(transaction), HttpStatus.OK);
     }
 

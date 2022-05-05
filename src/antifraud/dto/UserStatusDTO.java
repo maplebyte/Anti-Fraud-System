@@ -1,5 +1,6 @@
 package antifraud.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,12 +11,27 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class UserStatusDTO {
 
-    @NotEmpty(message = "Username mustn't be empty")
-    @NotNull(message = "Username mustn't be null")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String username;
 
     @NotEmpty(message = "User status mustn't be empty")
     @NotNull(message = "User status mustn't be null")
     private String status;
+
+    private UserStatusDTO(String status) {
+        this.status = status;
+    }
+
+    public static class UserLocked extends UserStatusDTO {
+        public UserLocked(String username) {
+            super(String.format("User %s locked!", username));
+        }
+    }
+
+    public static class UserUnlocked extends UserStatusDTO {
+        public UserUnlocked(String username) {
+            super(String.format("User %s unlocked!", username));
+        }
+    }
 
 }

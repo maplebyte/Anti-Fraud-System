@@ -13,6 +13,7 @@ public class MyUserMapper {
         user.setName(userDTO.getName());
         user.setPassword(userDTO.getPassword());
         user.setUsername(userDTO.getUsername());
+        user.setRole(userDTO.getRole());
         return user;
     }
 
@@ -22,9 +23,9 @@ public class MyUserMapper {
         userDTO.setName(user.getName());
         userDTO.setPassword(user.getPassword());
         userDTO.setUsername(user.getUsername());
+        userDTO.setRole(user.getRole());
         return userDTO;
     }
 
 }
 // TODO rewrite with mapstract
-// TODO add role

@@ -1,5 +1,6 @@
 package antifraud.dto;
 
+import antifraud.utils.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -26,5 +27,7 @@ public class UserDTO {
     @Size(min = 3, message = "Password must be longer than 40 characters")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
+    private Role role;
 
 }

@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ResultDTO {
+public class TransactionResultDTO {
+
     private String result;
+
 }

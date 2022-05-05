@@ -1,7 +1,7 @@
 package antifraud.utils;
 
 public enum Role {
-    USER, ADMIN;
+    ADMINISTRATOR, MERCHANT, SUPPORT;
 
     public String getRoleWithPrefix() {
         return "ROLE_" + name();

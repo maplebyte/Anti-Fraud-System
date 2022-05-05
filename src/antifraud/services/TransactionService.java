@@ -1,6 +1,6 @@
 package antifraud.services;
 
-import antifraud.dto.ResultDTO;
+import antifraud.dto.TransactionResultDTO;
 import antifraud.dto.TransactionDTO;
 import antifraud.exceptions.TransactionException;
 import antifraud.utils.TransactionStatus;
@@ -12,7 +12,7 @@ import java.util.Objects;
 @Service
 public class TransactionService {
 
-    public ResultDTO validate(TransactionDTO transaction) {
+    public TransactionResultDTO validate(TransactionDTO transaction) {
         if (Objects.isNull(transaction)) {
             throw new TransactionException();
         }
@@ -27,7 +27,7 @@ public class TransactionService {
                 .findFirst()
                 .orElseThrow(TransactionException::new);
 
-        return new ResultDTO(transactionStatus.name());
+        return new TransactionResultDTO(transactionStatus.name());
     }
 
 }

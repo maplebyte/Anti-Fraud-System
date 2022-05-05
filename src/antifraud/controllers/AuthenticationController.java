@@ -1,6 +1,8 @@
 package antifraud.controllers;
 
+import antifraud.dto.UserAccessDTO;
 import antifraud.dto.UserDTO;
+import antifraud.dto.UserRoleDTO;
 import antifraud.dto.UserStatusDTO;
 import antifraud.services.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -40,5 +42,23 @@ public class AuthenticationController {
        userService.removeUserByUsername(username);
        return new ResponseEntity<>(new UserStatusDTO(username, "Deleted successfully!"), HttpStatus.OK);
     }
+
+    @PutMapping("/api/auth/role")
+    public ResponseEntity<UserDTO> update(@RequestBody @Valid UserRoleDTO userRoleDTO) {
+        log.info("Incoming: {}", userRoleDTO);
+        UserDTO updatedUser = userService.updateRoleByUsername(userRoleDTO);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    @PutMapping("/api/auth/access")
+    public ResponseEntity<UserStatusDTO> update(@RequestBody @Valid UserAccessDTO userAccessDTO) {
+        log.info("Incoming user: " + userAccessDTO);
+        String username = userAccessDTO.getUsername();
+        UserStatusDTO userStatusDTO = userService.updateAccessByUsername(userAccessDTO)
+                ? new UserStatusDTO.UserLocked(username)
+                : new UserStatusDTO.UserUnlocked(username);
+        return new ResponseEntity<>(userStatusDTO, HttpStatus.OK);
+    }
+
 
 }
