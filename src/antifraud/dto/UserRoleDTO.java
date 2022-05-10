@@ -1,7 +1,7 @@
-package antifraud.dto.userDTOs;
+package antifraud.dto;
 
 import antifraud.utils.Role;
-import antifraud.validation.ValidEnum;
+import antifraud.validation.enums.ValidEnum;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;

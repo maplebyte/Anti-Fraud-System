@@ -1,4 +1,4 @@
-package antifraud.validation;
+package antifraud.validation.enums;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

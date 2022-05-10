@@ -21,8 +21,7 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                .userDetailsService(userDetailedService)
+        auth.userDetailsService(userDetailedService)
                 .passwordEncoder(getEncoder());
     }
 
@@ -36,6 +35,9 @@ public class WebSecurityConfigurerImpl extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(HttpMethod.POST, "/api/antifraud/transaction").hasRole(Role.MERCHANT.name())
                 .mvcMatchers(HttpMethod.PUT, "/api/auth/access").hasRole(Role.ADMINISTRATOR.name())
                 .mvcMatchers(HttpMethod.PUT, "/api/auth/role").hasRole(Role.ADMINISTRATOR.name())
+                .mvcMatchers(HttpMethod.POST, "api/antifraud/suspicious-ip", "api/antifraud/stolencard").hasRole(Role.SUPPORT.name())
+                .mvcMatchers(HttpMethod.GET, "api/antifraud/suspicious-ip", "api/antifraud/stolencard").hasRole(Role.SUPPORT.name())
+                .mvcMatchers(HttpMethod.DELETE, "api/antifraud/suspicious-ip/*", "api/antifraud/stolencard/*").hasRole(Role.SUPPORT.name())
                 .and()
                 .httpBasic()
                 .authenticationEntryPoint(authenticationEntryPoint()) // Handles auth error
