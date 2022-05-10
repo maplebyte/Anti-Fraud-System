@@ -1,4 +1,4 @@
-package antifraud.models;
+package antifraud.entities;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,18 +9,18 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "stolen_card")
+@Table(name = "suspicious_ip")
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
-public class StolenCard {
+public class SuspiciousIp {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    private String number;
+    private String ip;
 
 }

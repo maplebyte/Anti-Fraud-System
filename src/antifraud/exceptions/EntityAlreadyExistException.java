@@ -5,10 +5,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(code = HttpStatus.CONFLICT)
-public class RoleIsAlreadyProvidedException extends RuntimeException {
+public class EntityAlreadyExistException extends RuntimeException {
 
-    public RoleIsAlreadyProvidedException(Role role) {
+    public EntityAlreadyExistException(String username) {
+        super("Exception: Entity with data " + username + " already exist" );
+    }
+
+    public EntityAlreadyExistException(Role role) {
         super(role.name() + " is already provided");
     }
 
 }
+
+

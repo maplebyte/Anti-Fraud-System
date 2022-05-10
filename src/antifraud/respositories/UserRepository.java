@@ -1,6 +1,6 @@
 package antifraud.respositories;
 
-import antifraud.models.User;
+import antifraud.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

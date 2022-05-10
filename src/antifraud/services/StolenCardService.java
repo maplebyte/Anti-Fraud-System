@@ -1,13 +1,11 @@
 package antifraud.services;
 
 import antifraud.dto.StolenCardDTO;
-import antifraud.dto.SuspiciousIpDTO;
 import antifraud.dto.mappers.StolenCardMapper;
-import antifraud.exceptions.SuspiciousIpAlreadyExistException;
-import antifraud.exceptions.SuspiciousIpNotFoundException;
-import antifraud.exceptions.UserNullPointerException;
-import antifraud.models.StolenCard;
-import antifraud.models.SuspiciousIp;
+import antifraud.exceptions.EntityAlreadyExistException;
+import antifraud.exceptions.EntityNotFoundException;
+import antifraud.exceptions.EntityNullPointerException;
+import antifraud.entities.StolenCard;
 import antifraud.respositories.StolenCardRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +30,10 @@ public class StolenCardService {
 
     public StolenCardDTO saveStolenCard(StolenCardDTO stolenCardDTO) {
         if (Objects.isNull(stolenCardDTO)) {
-            throw new NullPointerException(); // TODO add custom null
+            throw new EntityNullPointerException();
         }
         if (stolenCardRepository.existsByNumber(stolenCardDTO.getNumber())) {
-            throw new SuspiciousIpAlreadyExistException(stolenCardDTO.getNumber());
+            throw new EntityAlreadyExistException(stolenCardDTO.getNumber());
         }
         StolenCard savedStolenCard = stolenCardMapper.stolenCardDTOToStolenCard(stolenCardDTO);
         stolenCardRepository.save(savedStolenCard);
@@ -45,7 +43,7 @@ public class StolenCardService {
 
     public void removeStolenCard(String number) {
         if (!stolenCardRepository.existsByNumber(number)) {
-            throw new SuspiciousIpNotFoundException(number);
+            throw new EntityNotFoundException(number);
         }
         stolenCardRepository.deleteByNumber(number);
         log.info("IP {} was deleted", number);

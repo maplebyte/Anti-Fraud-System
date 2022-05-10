@@ -2,9 +2,10 @@ package antifraud.services;
 
 import antifraud.dto.SuspiciousIpDTO;
 import antifraud.dto.mappers.SuspiciousIpMapper;
-import antifraud.exceptions.SuspiciousIpAlreadyExistException;
-import antifraud.exceptions.SuspiciousIpNotFoundException;
-import antifraud.models.SuspiciousIp;
+import antifraud.exceptions.EntityAlreadyExistException;
+import antifraud.exceptions.EntityNotFoundException;
+import antifraud.exceptions.EntityNullPointerException;
+import antifraud.entities.SuspiciousIp;
 import antifraud.respositories.SuspiciousIpRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,10 @@ public class SuspiciousIpService {
 
     public SuspiciousIpDTO saveSuspiciousIp(SuspiciousIpDTO suspiciousIpDTO) {
         if (Objects.isNull(suspiciousIpDTO)) {
-            throw new NullPointerException(); // TODO add custom null
+            throw new EntityNullPointerException();
         }
         if (suspiciousIpRepository.existsByIp(suspiciousIpDTO.getIp())) {
-            throw new SuspiciousIpAlreadyExistException(suspiciousIpDTO.getIp());
+            throw new EntityAlreadyExistException(suspiciousIpDTO.getIp());
         }
        SuspiciousIp savedSuspiciousIp = suspiciousIpMapper.suspiciousIpDTOToSuspiciousIp(suspiciousIpDTO);
        suspiciousIpRepository.save(savedSuspiciousIp);
@@ -42,7 +43,7 @@ public class SuspiciousIpService {
 
     public void removeSuspiciousIp(String ip) {
         if (!suspiciousIpRepository.existsByIp(ip)) {
-            throw new SuspiciousIpNotFoundException(ip);
+            throw new EntityNotFoundException(ip);
         }
         suspiciousIpRepository.deleteByIp(ip);
         log.info("IP {} was deleted", ip);

@@ -1,6 +1,6 @@
 package antifraud.auth;
 
-import antifraud.models.User;
+import antifraud.entities.User;
 import antifraud.respositories.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package antifraud.dto.mappers;
 
 import antifraud.dto.UserDTO;
-import antifraud.models.User;
+import antifraud.entities.User;
 import org.springframework.stereotype.Component;
 
 @Component

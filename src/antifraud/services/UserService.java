@@ -5,7 +5,7 @@ import antifraud.dto.UserDTO;
 import antifraud.dto.UserRoleDTO;
 import antifraud.dto.mappers.MyUserMapper;
 import antifraud.exceptions.*;
-import antifraud.models.User;
+import antifraud.entities.User;
 import antifraud.respositories.UserRepository;
 import antifraud.utils.Operation;
 import antifraud.utils.Role;
@@ -35,10 +35,10 @@ public class UserService {
 
     public UserDTO saveUser(UserDTO userDTO) {
         if (Objects.isNull(userDTO)) {
-            throw new UserNullPointerException();
+            throw new EntityNullPointerException();
         }
         if (userRepository.findUserByUsername(userDTO.getUsername()).isPresent()) {
-            throw new UserAlreadyExistException(userDTO.getUsername());
+            throw new EntityAlreadyExistException(userDTO.getUsername());
         }
         String encodePassword = passwordEncoder.encode(userDTO.getPassword());
         User savedUser = userMapper.userDTOToUser(userDTO);
@@ -66,7 +66,7 @@ public class UserService {
 
     public void removeUserByUsername(String username) {
         User user = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
+                .orElseThrow(() -> new EntityNotFoundException(username));
         userRepository.delete(user);
         log.info("User with {} was deleted", username);
     }
@@ -74,13 +74,13 @@ public class UserService {
     public UserDTO updateRoleByUsername(UserRoleDTO userRoleDTO) {
         String username = userRoleDTO.getUsername();
         User user = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
+                .orElseThrow(() -> new EntityNotFoundException(username));
         Role roleForUpdate = Role.valueOf(userRoleDTO.getRole());
         if (!List.of(Role.MERCHANT, Role.SUPPORT).contains(roleForUpdate)) {
             throw new UnsupportedRoleException(roleForUpdate.name());
         }
         if (roleForUpdate == user.getRole()) {
-            throw new RoleIsAlreadyProvidedException(roleForUpdate);
+            throw new EntityAlreadyExistException(roleForUpdate);
         }
         user.setRole(roleForUpdate);
         userRepository.save(user);
@@ -91,7 +91,7 @@ public class UserService {
     public boolean updateAccessByUsername(UserAccessDTO userAccessDTO) {
         String username = userAccessDTO.getUsername();
         User user = userRepository.findUserByUsername(username)
-                .orElseThrow(() -> new UserNotFoundException(username));
+                .orElseThrow(() -> new EntityNotFoundException(username));
         if (user.getRole() == Role.ADMINISTRATOR) {
             throw new UnsupportedRoleException("User with " + Role.ADMINISTRATOR.name() + " role " + "can't be locked");
         }

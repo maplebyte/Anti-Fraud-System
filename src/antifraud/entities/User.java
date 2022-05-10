@@ -1,4 +1,4 @@
-package antifraud.models;
+package antifraud.entities;
 
 import antifraud.utils.Role;
 import lombok.*;

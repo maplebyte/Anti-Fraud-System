@@ -1,7 +1,7 @@
 package antifraud.dto.mappers;
 
 import antifraud.dto.SuspiciousIpDTO;
-import antifraud.models.SuspiciousIp;
+import antifraud.entities.SuspiciousIp;
 import org.springframework.stereotype.Component;
 
 @Component
