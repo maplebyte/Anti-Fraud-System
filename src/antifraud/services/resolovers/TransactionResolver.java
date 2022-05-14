@@ -8,6 +8,7 @@ import antifraud.respositories.TransactionRepository;
 import antifraud.services.StolenCardService;
 import antifraud.services.SuspiciousIpService;
 import antifraud.utils.TransactionStatus;
+import antifraud.utils.TransactionStatusesWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -25,19 +26,21 @@ public class TransactionResolver {
     private static final String SUSPICIOUS_IP = "ip-correlation";
     private static final String SUSPICIOUS_REGION = "region-correlation";
 
+    private TransactionStatusesWrapper transactionStatusesWrapper;
+
     private static final long TIME_BEFORE_TRANSACTION = 1;
 
     private final SuspiciousIpService suspiciousIpService;
     private final StolenCardService stolenCardService;
     private final TransactionRepository transactionRepository;
-
     private TransactionStatus currentTransactionStatus;
 
     @Autowired
-    public TransactionResolver(SuspiciousIpService suspiciousIpService, StolenCardService stolenCardService, TransactionRepository transactionRepository) {
+    public TransactionResolver(TransactionStatusesWrapper transactionStatusesWrapper, SuspiciousIpService suspiciousIpService, StolenCardService stolenCardService, TransactionRepository transactionRepository) {
         this.suspiciousIpService = suspiciousIpService;
         this.stolenCardService = stolenCardService;
         this.transactionRepository = transactionRepository;
+        this.transactionStatusesWrapper = transactionStatusesWrapper;
     }
 
     public TransactionResultDTO checkReason(TransactionDTO transaction) {
@@ -115,8 +118,8 @@ public class TransactionResolver {
 
     private TransactionStatus getTransactionStatusByAmount(Long amount) {
         return Arrays.stream(TransactionStatus.values())
-                .filter(num -> Math.max(num.getMinAmount(), amount)
-                        == Math.min(amount, num.getMaxAmount()))
+                .filter(num -> Math.max(transactionStatusesWrapper.getMinAmountByTransactionStatus(num), amount)
+                        == Math.min(amount, transactionStatusesWrapper.getMaxAmountByTransactionStatus(num)))
                 .findFirst()
                 .orElseThrow(TransactionException::new);
     }

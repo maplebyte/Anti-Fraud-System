@@ -8,8 +8,8 @@ public enum TransactionStatus {
     MANUAL_PROCESSING(201, 1500),
     PROHIBITED(1501, Long.MAX_VALUE);
 
-    private final long minAmount;
-    private final long maxAmount;
+    private long minAmount;
+    private long maxAmount;
 
     TransactionStatus(long minAmount, long maxAmount) {
         this.minAmount = minAmount;

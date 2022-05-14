@@ -1,14 +1,10 @@
 package antifraud.entities;
 
 import antifraud.utils.TransactionStatus;
-import antifraud.utils.WorldRegion;
-import antifraud.validation.enums.ValidEnum;
-import antifraud.validation.patterns.PatternsValidatorUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.validator.constraints.LuhnCheck;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
@@ -27,6 +23,8 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long amount;
+
     @NotBlank
     private String ip;
 
@@ -38,5 +36,10 @@ public class Transaction {
 
     @NotNull
     private LocalDateTime date;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionStatus status;
+
+    private String feedback;
 
 }

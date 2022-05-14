@@ -15,6 +15,10 @@ public class EntityAlreadyExistException extends RuntimeException {
         super(role.name() + " is already provided");
     }
 
+    public EntityAlreadyExistException() {
+        super("Entity already provided");
+    }
+
 }
 
 
