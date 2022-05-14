@@ -11,11 +11,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping("api/antifraud")
 @Validated
 @Slf4j
 public class StolenCardController {
@@ -27,20 +27,21 @@ public class StolenCardController {
         this.stolenCardService = stolenCardService;
     }
 
-    @PostMapping("/api/antifraud/stolencard")
+    @PostMapping("/stolencard")
     public ResponseEntity<StolenCardDTO> saveStolenCard(@RequestBody @Valid StolenCardDTO stolenCardDTO) {
         log.info("Incoming card {} ", stolenCardDTO);
         StolenCardDTO savedStolenCard = stolenCardService.saveStolenCard(stolenCardDTO);
         return new ResponseEntity<>(savedStolenCard, HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/antifraud/stolencard/{number}")
-    public ResponseEntity<StatusResultDTO> removeIp(@PathVariable @LuhnCheck(message = "Invalid card number.") String number) {
+    @DeleteMapping("/stolencard/{number}")
+    public ResponseEntity<StatusResultDTO> removeStolenCard(@PathVariable @LuhnCheck(message = "Invalid card number.") String number) {
         stolenCardService.removeStolenCard(number);
+        log.info("Removed card with number {} ", number);
         return new ResponseEntity<>(new StatusResultDTO.StolenCardRemoved(number), HttpStatus.OK);
     }
 
-    @GetMapping("/api/antifraud/stolencard")
+    @GetMapping("/stolencard")
     public ResponseEntity<List<StolenCardDTO>> getAll() {
         return new ResponseEntity<>(stolenCardService.getAllStolenCard(), HttpStatus.OK);
     }

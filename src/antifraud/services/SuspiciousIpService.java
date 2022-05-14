@@ -50,8 +50,8 @@ public class SuspiciousIpService {
     }
 
     public List<SuspiciousIpDTO> getAllSuspiciousIp() {
-        List<SuspiciousIp> users = suspiciousIpRepository.findAll();
-        return users
+        List<SuspiciousIp> suspiciousIps = suspiciousIpRepository.findAll();
+        return suspiciousIps
                 .stream()
                 .map(suspiciousIpMapper::suspiciousIpToSuspiciousIpDTO)
                 .collect(Collectors.toList());

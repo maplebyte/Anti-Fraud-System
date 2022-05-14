@@ -17,6 +17,7 @@ import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @RestController
+@RequestMapping("api/antifraud")
 @Validated
 @Slf4j
 public class SuspiciousIpController {
@@ -28,14 +29,14 @@ public class SuspiciousIpController {
         this.suspiciousIpService = securityService;
     }
 
-    @PostMapping("api/antifraud/suspicious-ip")
+    @PostMapping("/suspicious-ip")
     public ResponseEntity<SuspiciousIpDTO> saveIp(@RequestBody @Valid SuspiciousIpDTO suspiciousIpDTO) {
         log.info("Incoming ip {} ", suspiciousIpDTO);
         SuspiciousIpDTO savedSuspiciousIpDTO = suspiciousIpService.saveSuspiciousIp(suspiciousIpDTO);
         return new ResponseEntity<>(savedSuspiciousIpDTO, HttpStatus.OK);
     }
 
-    @DeleteMapping("/api/antifraud/suspicious-ip/{ip}")
+    @DeleteMapping("/suspicious-ip/{ip}")
     public ResponseEntity<StatusResultDTO> removeIp(@PathVariable @Pattern(regexp = PatternsValidatorUtil.IP_FORMAT,
                                                                 message = "Invalid IP format.")
                                                                 String ip) {
@@ -43,7 +44,7 @@ public class SuspiciousIpController {
         return new ResponseEntity<>(new StatusResultDTO.SuspiciousIpRemoved(ip), HttpStatus.OK);
     }
 
-    @GetMapping("/api/antifraud/suspicious-ip")
+    @GetMapping("/suspicious-ip")
     public ResponseEntity<List<SuspiciousIpDTO>> getAll() {
         return new ResponseEntity<>(suspiciousIpService.getAllSuspiciousIp(), HttpStatus.OK);
     }

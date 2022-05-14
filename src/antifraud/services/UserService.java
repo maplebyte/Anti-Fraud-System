@@ -3,7 +3,7 @@ package antifraud.services;
 import antifraud.dto.UserAccessDTO;
 import antifraud.dto.UserDTO;
 import antifraud.dto.UserRoleDTO;
-import antifraud.dto.mappers.MyUserMapper;
+import antifraud.dto.mappers.UserMapper;
 import antifraud.exceptions.*;
 import antifraud.entities.User;
 import antifraud.respositories.UserRepository;
@@ -23,11 +23,11 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final MyUserMapper userMapper;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, MyUserMapper userMapper, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;

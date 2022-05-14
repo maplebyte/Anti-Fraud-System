@@ -1,6 +1,7 @@
 package antifraud.dto;
 
 import antifraud.utils.Role;
+import antifraud.validation.enums.ValidEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 

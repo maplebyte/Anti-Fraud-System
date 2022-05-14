@@ -13,6 +13,8 @@ public class ConstraintViolationExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    void handleConstraintViolationException() {}
+    void handleConstraintViolationException(ConstraintViolationException ex) {
+        System.out.println(ex.getMessage());
+    }
 
 }

@@ -5,7 +5,7 @@ import antifraud.entities.User;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MyUserMapper {
+public class UserMapper {
 
     public User userDTOToUser(UserDTO userDTO) {
         User user = new User();

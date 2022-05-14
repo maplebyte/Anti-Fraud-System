@@ -16,6 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping("api/antifraud")
 @Validated
 @Slf4j
 public class TransactionController {
@@ -27,27 +28,27 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
-    @PostMapping("/api/antifraud/transaction")
+    @PostMapping("/transaction")
     public ResponseEntity<TransactionResultDTO> addTransaction(@RequestBody @Valid TransactionDTO transactionDTO) {
         log.info("Incoming transaction {}", transactionDTO);
         return new ResponseEntity<>(transactionService.validate(transactionDTO), HttpStatus.OK);
     }
 
-    @PutMapping("/api/antifraud/transaction")
+    @PutMapping("/transaction")
     public ResponseEntity<TransactionDTO> addFeedback(@RequestBody @Valid FeedBackDTO feedBackDTO) {
         log.info("Incoming feedback {}", feedBackDTO);
         TransactionDTO transaction = transactionService.changeFraudLimits(feedBackDTO);
         return new ResponseEntity<>(transaction, HttpStatus.OK);
     }
 
-    @GetMapping("/api/antifraud/history")
+    @GetMapping("/history")
     public ResponseEntity<List<TransactionDTO>> getAll() {
         List<TransactionDTO> transactions = transactionService.getAllTransactions();
         log.info("All transactions" + transactions.toString());
         return new ResponseEntity<>(transactions, HttpStatus.OK);
     }
 
-    @GetMapping("/api/antifraud/history/{number}")
+    @GetMapping("/history/{number}")
     public ResponseEntity<List<TransactionDTO>> getTransactionByCardNumber(@PathVariable("number") @LuhnCheck(message = "Invalid card number.") String cardNumber) {
         List<TransactionDTO> transactions = transactionService.getTransactionsByCardNumber(cardNumber);
         return new ResponseEntity<>(transactions, HttpStatus.OK);
