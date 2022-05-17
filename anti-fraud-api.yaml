@@ -1,0 +1,627 @@
+openapi: 3.0.1
+info:
+  title: Anti-Fraud System API
+  description: The set of REST endpoints responsible for interacting with users, and an internal transaction validation logic based on a set of heuristic rules.The data returns in JSON format.
+  version: '1.0'
+servers:
+  - url: http://localhost:28852
+    description: Generated server url
+tags:
+  - name: Stolen Card Controller
+    description: Controller enables anti-fraud system to retrieve a list of prohibited card numbers to ban them from carrying out any transactions.
+  - name: Transaction Controller
+    description: Controller enables anti-fraud system to save transaction and add additional information such as feedback.
+  - name: Suspicious IP Controller
+    description: Controller enables anti-fraud system to retrieve a list of suspicious IP address to ban them from carrying out any transactions.
+  - name: User Controller
+    description: Controller provides the HTTP Basic authentication, enables to retrieve a list of users and(>>>) manupulate data.
+paths:
+  /api/auth/role:
+    put:
+      tags:
+        - User Controller
+      summary: Allows a user with the ADMINISTRATOR role to change user roles
+      operationId: update
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRoleDTO'
+        required: true
+      responses:
+        '200':
+          description: Successfully deleted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: The role is not SUPPORT or MERCHANT
+        '404':
+          description: The user not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '409':
+          description: The role is already assigned
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        default:
+          description: Returns a UserDTO
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+  /api/auth/access:
+    put:
+      tags:
+        - User Controller
+      summary: Allows a user with the ADMINISTRATOR role to lock/unlock users
+      operationId: update_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAccessDTO'
+        required: true
+      responses:
+        '200':
+          description: Successfully deleted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserStatusDTO'
+        '400':
+          description: The user with role ADMINISTRATOR cannot be blocked
+        '404':
+          description: The user not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserStatusDTO'
+        default:
+          description: Returns a UserDTO
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserStatusDTO'
+  /api/antifraud/transaction:
+    put:
+      tags:
+        - Transaction Controller
+      summary: Changes the limits in transaction statuses
+      operationId: addFeedback
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FeedBackDTO'
+        required: true
+      responses:
+        '201':
+          description: Successfully saved
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TransactionDTO'
+        '400':
+          description: The feedback has the wrong format (other than ALLOWED, MANUAL_PROCESSING, PROHIBITE)
+        '409':
+          description: The transaction is already in database
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TransactionDTO'
+        '422':
+          description: The feedback equals transaction status
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TransactionDTO'
+        default:
+          description: Returns a TransactionResultDTO
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TransactionDTO'
+    post:
+      tags:
+        - Transaction Controller
+      summary: Saves a new transaction with certain status
+      operationId: saveTransaction
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionDTO'
+        required: true
+      responses:
+        '201':
+          description: Successfully saved
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TransactionResultDTO'
+        '400':
+          description: The card number has the wrong format
+        default:
+          description: Returns a TransactionResultDTO
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/TransactionResultDTO'
+  /api/auth/user:
+    post:
+      tags:
+        - User Controller
+      summary: Saves a user
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserDTO'
+        required: true
+      responses:
+        '201':
+          description: Successfully saved
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: Bad Request
+        '409':
+          description: The user is already in database
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+        default:
+          description: Returns a SuspiciousIpDTO
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserDTO'
+  /api/antifraud/suspicious-ip:
+    get:
+      tags:
+        - Suspicious IP Controller
+      summary: Gets all suspicious IP address
+      operationId: getAll_1
+      responses:
+        '200':
+          description: Successfully retrieved
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SuspiciousIpDTO'
+        '400':
+          description: Bad Request
+        default:
+          description: List<SuspiciousIpDTO>
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SuspiciousIpDTO'
+    post:
+      tags:
+        - Suspicious IP Controller
+      summary: Saves a suspicious IP address
+      operationId: saveIp
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuspiciousIpDTO'
+        required: true
+      responses:
+        '201':
+          description: Successfully saved
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SuspiciousIpDTO'
+        '400':
+          description: The suspicious IP address has the wrong format
+        '409':
+          description: The suspicious IP address is already in database
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SuspiciousIpDTO'
+        default:
+          description: Returns a SuspiciousIpDTO
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/SuspiciousIpDTO'
+  /api/antifraud/stolencard:
+    get:
+      tags:
+        - Stolen Card Controller
+      summary: Gets all stolen cards
+      operationId: getAll_2
+      responses:
+        '200':
+          description: Successfully retrieved
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StolenCardDTO'
+        '400':
+          description: Bad Request
+        default:
+          description: List<StolenCardDTO>
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StolenCardDTO'
+    post:
+      tags:
+        - Stolen Card Controller
+      summary: Saves a stolen card
+      operationId: saveStolenCard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StolenCardDTO'
+        required: true
+      responses:
+        '201':
+          description: Successfully saved
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StolenCardDTO'
+        '400':
+          description: The card number has the wrong format
+        '409':
+          description: The card is already in database
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StolenCardDTO'
+        default:
+          description: Returns a StolenCardDTO
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StolenCardDTO'
+  /api/auth/list:
+    get:
+      tags:
+        - User Controller
+      summary: Gets all users
+      operationId: getAll
+      responses:
+        '200':
+          description: Successfully retrieved
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+        '400':
+          description: Bad Request
+        default:
+          description: List<UserDTO>
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserDTO'
+  /api/antifraud/history:
+    get:
+      tags:
+        - Transaction Controller
+      summary: Gets all transactions
+      operationId: getAll_3
+      responses:
+        '200':
+          description: Successfully retrieved
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionDTO'
+        '400':
+          description: Bad Request
+        default:
+          description: List<TransactionDTO>
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionDTO'
+  /api/antifraud/history/{number}:
+    get:
+      tags:
+        - Transaction Controller
+      summary: Gets all transactions
+      operationId: getTransactionByCardNumber
+      parameters:
+        - name: number
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully retrieved
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionDTO'
+        '400':
+          description: Bad Request
+        '404':
+          description: The transaction not found
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionDTO'
+        default:
+          description: List<TransactionDTO>
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TransactionDTO'
+  /api/auth/user/{username}:
+    delete:
+      tags:
+        - User Controller
+      summary: Deletes a user
+      operationId: delete
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserStatusDTO'
+        '400':
+          description: Bad Request
+        '404':
+          description: The user not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserStatusDTO'
+        default:
+          description: Returns a UserStatusDTO
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserStatusDTO'
+  /api/antifraud/suspicious-ip/{ip}:
+    delete:
+      tags:
+        - Suspicious IP Controller
+      summary: Deletes a suspicious IP address
+      operationId: removeIp
+      parameters:
+        - name: ip
+          in: path
+          required: true
+          schema:
+            pattern: ((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StatusResultDTO'
+        '400':
+          description: The suspicious IP address number has the wrong format
+        '404':
+          description: The suspicious IP address not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StatusResultDTO'
+        default:
+          description: Returns a StatusResultDTO
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StatusResultDTO'
+  /api/antifraud/stolencard/{number}:
+    delete:
+      tags:
+        - Stolen Card Controller
+      summary: Deletes a stolen card
+      operationId: removeStolenCard
+      parameters:
+        - name: number
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StatusResultDTO'
+        '400':
+          description: The card number has the wrong format
+        '404':
+          description: The card not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StatusResultDTO'
+        default:
+          description: Returns a StatusResultDTO
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/StatusResultDTO'
+components:
+  schemas:
+    UserRoleDTO:
+      required:
+        - username
+      type: object
+      properties:
+        role:
+          type: string
+        username:
+          type: string
+    UserDTO:
+      required:
+        - name
+        - password
+        - username
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          maxLength: 40
+          minLength: 0
+          type: string
+        username:
+          maxLength: 40
+          minLength: 0
+          type: string
+        password:
+          maxLength: 2147483647
+          minLength: 3
+          type: string
+          writeOnly: true
+        role:
+          type: string
+          enum:
+            - ADMINISTRATOR
+            - MERCHANT
+            - SUPPORT
+    UserAccessDTO:
+      required:
+        - username
+      type: object
+      properties:
+        operation:
+          type: string
+        username:
+          type: string
+    UserStatusDTO:
+      required:
+        - status
+      type: object
+      properties:
+        username:
+          type: string
+        status:
+          type: string
+    FeedBackDTO:
+      required:
+        - feedback
+      type: object
+      properties:
+        transactionId:
+          type: integer
+          format: int64
+        feedback:
+          type: string
+    TransactionDTO:
+      required:
+        - ip
+      type: object
+      properties:
+        transactionId:
+          type: integer
+          format: int64
+        amount:
+          type: integer
+          format: int64
+        ip:
+          pattern: ((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}
+          type: string
+        number:
+          type: string
+        region:
+          type: string
+        date:
+          type: string
+          format: date-time
+        result:
+          type: string
+          readOnly: true
+        feedback:
+          type: string
+          readOnly: true
+    TransactionResultDTO:
+      required:
+        - info
+      type: object
+      properties:
+        result:
+          type: string
+          enum:
+            - ALLOWED
+            - MANUAL_PROCESSING
+            - PROHIBITED
+        info:
+          type: string
+    SuspiciousIpDTO:
+      required:
+        - ip
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        ip:
+          pattern: ((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)(\.(?!$)|$)){4}
+          type: string
+    StolenCardDTO:
+      required:
+        - number
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        number:
+          type: string
+    StatusResultDTO:
+      required:
+        - status
+      type: object
+      properties:
+        status:
+          type: string
