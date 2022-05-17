@@ -2,9 +2,9 @@
 JetBrains Academy. Project: [Anti-Fraud System](https://hyperskill.org/projects/232?track=12).
 
 ## About 
-This project demonstrates (in a simplified form) the principles of anti-fraud systems in the 
-For this project, we will work on a system with an expanded role model, a set of REST 
-endpoints responsible for interacting with users, and an internal transaction validation logic based on a set of heuristic rules.
+A RESTfull web service with using SpringBoot and the basics of user authentication and authorization. <br> <br>
+This project demonstrates (in a simplified form) the principles of anti-fraud systems in the financial sector.
+It needs to work on a system with an expanded role model, a set of REST endpoints responsible for interacting with users, and an internal transaction validation logic based on a set of heuristic rules.
 
 ### The role model for system:</br>
 <table>
@@ -44,14 +44,14 @@ endpoints responsible for interacting with users, and an internal transaction va
     <td>-</td>
 </tr>
 <tr>
-    <td>POST /api/auth/access</td>
+    <td>PUT /api/auth/access</td>
     <td>-</td>
     <td>-</td>
     <td>+</td>
     <td>-</td>
 </tr>
 <tr>
-    <td>POST /api/auth/role</td>
+    <td>PUT /api/auth/role</td>
     <td>-</td>
     <td>-</td>
     <td>+</td>
@@ -193,8 +193,24 @@ results, we will change the limits of fraud detection algorithms following the s
     </tbody>
 </table>
 
-## Technologies 
-WIP
+## Technologies
+
+* Authentication
+* Authorization
+* Getting data from REST, posting and deleting data via REST
+
+#### Frameworks & libraries: 
+* [Spring Boot](https://spring.io/projects/spring-boot) 
+* [Spring Security](https://spring.io/projects/spring-security) 
+* [Spring Data JPA](https://spring.io/projects/spring-data-jpa)
+* [Lombok](https://projectlombok.org/)
+* [Swagger 3.0](https://swagger.io/specification/)
+
+#### Database:
+* [PostgreSQL](https://www.postgresql.org/)
+
+#### Build Tool:
+* [Gradle](https://gradle.org/)
 
 ## API
-WIP
+[Documentation in .yaml format](https://github.com/ValeriaPiont/Anti-Fraud-System/blob/master/anti-fraud-api.yaml)
