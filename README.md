@@ -212,5 +212,8 @@ results, we will change the limits of fraud detection algorithms following the s
 #### Build Tool:
 * [Gradle](https://gradle.org/)
 
+#### Containerization platform:
+* [Docker](https://www.docker.com/)
+
 ## API
 [Documentation in .yaml format](https://github.com/ValeriaPiont/Anti-Fraud-System/blob/master/anti-fraud-api.yaml)
