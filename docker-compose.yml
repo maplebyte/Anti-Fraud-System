@@ -1,0 +1,21 @@
+version: '1.1'
+
+services:
+  db:
+    image: postgres:14.4
+    restart: always
+    container_name: anti-fraud-database
+    environment:
+      - POSTGRES_PASSWORD=1195
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=service_db
+    ports:
+      - 5432:5432
+  backend:
+    build: .
+    container_name: anti-fraud-app
+    ports:
+      - 28852:28852
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/service_db
+      SPRING_CONFIG_LOCATION: /anti-fraud/src/resources/application.properties
